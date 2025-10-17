@@ -3,148 +3,227 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Open Directory Search</title>
+    <title>Sagar Universal Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         
         * {
-            font-family: 'Inter', sans-serif;
-        }
-        
-        body {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
+            font-family: 'Inter', sans-serif;
+            background: #000000;
             overflow-x: hidden;
-            background: #0f172a;
+            height: 100%;
         }
         
-        html {
-            background: #0f172a;
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow-y: hidden;
-        }
-        
-        .gradient-bg::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
-            animation: pulse 15s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.1) rotate(180deg); }
-        }
-        
-        .glass-container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        
-        .iframe-container {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 
-                0 0 80px rgba(99, 102, 241, 0.3),
-                inset 0 0 40px rgba(255, 255, 255, 0.05);
+        .main-container {
+            min-height: 100vh;
+            background: linear-gradient(to bottom, #000000 0%, #0a0a0a 100%);
+            display: flex;
+            flex-direction: column;
         }
         
         .glow-text {
-            text-shadow: 0 0 40px rgba(167, 139, 250, 0.6);
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .search-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .search-box:focus-within {
+            border-color: rgba(167, 139, 250, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .search-input {
+            background: transparent;
+            border: none;
+            color: white;
+            outline: none;
+            width: 100%;
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
+            transition: all 0.3s ease;
+        }
+        
+        .search-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 40px rgba(167, 139, 250, 0.4);
+        }
+        
+        .tag-btn {
+            background: rgba(167, 139, 250, 0.08);
+            border: 1px solid rgba(167, 139, 250, 0.15);
+            color: #c4b5fd;
+            transition: all 0.2s ease;
+        }
+        
+        .tag-btn:hover {
+            background: rgba(167, 139, 250, 0.15);
+            border-color: rgba(167, 139, 250, 0.3);
+        }
+        
+        .results-frame {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
         }
         
         iframe {
             border: none;
             width: 100%;
             height: 100%;
+            background: white;
         }
         
-        .signature {
-            color: rgba(167, 139, 250, 0.8);
-            text-shadow: 0 0 30px rgba(167, 139, 250, 0.8),
-                         0 0 60px rgba(167, 139, 250, 0.4);
-            transition: all 0.3s ease;
-            animation: glow-pulse 3s ease-in-out infinite;
+        .footer-text {
+            color: rgba(167, 139, 250, 0.6);
+            text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
+            animation: pulse 3s ease-in-out infinite;
         }
         
-        .signature:hover {
-            color: rgba(199, 210, 254, 1);
-            text-shadow: 0 0 40px rgba(167, 139, 250, 1),
-                         0 0 80px rgba(167, 139, 250, 0.6);
-        }
-
-        @keyframes glow-pulse {
+        @keyframes pulse {
             0%, 100% { 
-                text-shadow: 0 0 30px rgba(167, 139, 250, 0.8),
-                             0 0 60px rgba(167, 139, 250, 0.4);
+                opacity: 0.6;
+                text-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
             }
             50% { 
-                text-shadow: 0 0 40px rgba(167, 139, 250, 1),
-                             0 0 80px rgba(167, 139, 250, 0.6);
+                opacity: 1;
+                text-shadow: 0 0 30px rgba(167, 139, 250, 0.6);
             }
+        }
+
+        .hero-section {
+            flex: 0 0 auto;
+            padding-top: 15vh;
+            padding-bottom: 8vh;
+        }
+
+        .content-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         @media (max-width: 768px) {
-            .iframe-container {
-                height: 70vh;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .iframe-container {
-                height: 75vh;
+            .hero-section {
+                padding-top: 10vh;
+                padding-bottom: 5vh;
             }
         }
     </style>
 </head>
 <body>
-    <div class="gradient-bg min-h-screen flex flex-col items-center justify-start p-4 md:p-8 relative">
+    <div class="main-container">
         
-        <!-- Header Section -->
-        <div class="text-center mb-6 md:mb-10 z-10 mt-4 md:mt-8">
-            <h1 class="text-4xl md:text-6xl font-bold text-white glow-text mb-3">
-                Open Directory Search
-            </h1>
-            <p class="text-sm md:text-lg text-gray-300 font-light tracking-wide">
-                Get direct download links from across the web.
-            </p>
-        </div>
+        <!-- Hero Section -->
+        <div class="hero-section px-6">
+            <div class="max-w-4xl mx-auto text-center">
+                
+                <!-- Logo/Title -->
+                <div class="mb-8">
+                    <h1 class="text-5xl md:text-7xl font-bold text-white mb-3">
+                        <span class="glow-text">SAGAR</span>
+                    </h1>
+                    <p class="text-gray-500 text-sm md:text-base tracking-widest uppercase">Universal Search</p>
+                </div>
 
-        <!-- Main Content Container -->
-        <div class="w-full max-w-7xl flex-grow flex flex-col z-10 mb-6">
-            <div class="iframe-container rounded-2xl md:rounded-3xl overflow-hidden w-full flex-grow">
-                <iframe 
-                    src="https://ewasion.github.io/opendirectory-finder/" 
-                    title="Open Directory Finder"
-                    loading="lazy"
-                    allow="clipboard-write"
-                    sandbox="allow-same-origin allow-scripts allow-forms allow-popups">
-                </iframe>
+                <!-- Search Bar -->
+                <div class="search-box rounded-2xl p-2 mb-6 max-w-2xl mx-auto">
+                    <div class="flex items-center gap-2">
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            placeholder="Search anything..."
+                            class="search-input px-6 py-4 text-base md:text-lg"
+                        >
+                        <button onclick="performSearch()" class="search-btn px-6 md:px-8 py-4 rounded-xl text-white font-medium whitespace-nowrap">
+                            Search
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Tags -->
+                <div class="flex flex-wrap justify-center gap-2 mb-4">
+                    <button onclick="quickSearch('movies')" class="tag-btn px-4 py-2 rounded-full text-xs md:text-sm">Movies</button>
+                    <button onclick="quickSearch('music')" class="tag-btn px-4 py-2 rounded-full text-xs md:text-sm">Music</button>
+                    <button onclick="quickSearch('books')" class="tag-btn px-4 py-2 rounded-full text-xs md:text-sm">Books</button>
+                    <button onclick="quickSearch('software')" class="tag-btn px-4 py-2 rounded-full text-xs md:text-sm">Software</button>
+                </div>
+
             </div>
         </div>
 
-        <!-- Footer Signature -->
-        <div class="signature text-center py-4 md:py-6 z-10 text-xs md:text-sm font-medium tracking-wider">
-            Made by <span class="font-semibold">SAGAR</span>
+        <!-- Results Section -->
+        <div id="resultsSection" class="content-section px-6 pb-6" style="display: none;">
+            <div class="max-w-7xl mx-auto w-full flex-1 flex flex-col">
+                <div class="results-frame rounded-2xl overflow-hidden flex-1" style="min-height: 500px;">
+                    <iframe 
+                        id="searchFrame"
+                        src=""
+                        title="Search Results"
+                        loading="lazy"
+                        allow="clipboard-write"
+                        sandbox="allow-same-origin allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox">
+                    </iframe>
+                </div>
+            </div>
         </div>
 
+        <!-- Footer -->
+        <footer class="py-6 text-center">
+            <p class="footer-text text-sm font-medium tracking-wider">
+                MADE BY SAGAR
+            </p>
+        </footer>
+
     </div>
+
+    <script>
+        const searchInput = document.getElementById('searchInput');
+        const searchFrame = document.getElementById('searchFrame');
+        const resultsSection = document.getElementById('resultsSection');
+
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                searchFrame.src = `https://ewasion.github.io/opendirectory-finder/?q=${encodeURIComponent(query)}`;
+                resultsSection.style.display = 'flex';
+                
+                setTimeout(() => {
+                    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+            }
+        }
+
+        function quickSearch(term) {
+            searchInput.value = term;
+            performSearch();
+        }
+    </script>
 </body>
 </html>
